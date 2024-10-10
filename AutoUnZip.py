@@ -1,9 +1,10 @@
 import os
 import subprocess
 
-universities = os.listdir(r"C:\Users\91700\Minor Project\dataset")
+root = r"K:\Abide Dataset"
+universities = os.listdir(root)
 for university in universities:
-    directory = os.path.join(r"C:\Users\91700\Minor Project\dataset", university)
+    directory = os.path.join(root, university)
 
     FolderList = os.listdir(directory)
 
@@ -16,10 +17,6 @@ for university in universities:
                 r"C:\Program Files\WinRAR\WinRAR.exe", 'x', '-r', 
                 os.path.join(direc, '*.gz'), direc,
             ], shell=True)
-
-            subprocess.run([
-                
-            ], shell = True)
         
         direc = os.path.join(directory, folder, r'session_1\rest_1')
         if os.path.exists(direc):
@@ -28,6 +25,3 @@ for university in universities:
                 r"C:\Program Files\WinRAR\WinRAR.exe", 'x', '-r', 
                 os.path.join(direc, '*.gz'), direc,
             ], shell=True)
-
-        
-
