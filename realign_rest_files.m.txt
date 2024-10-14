@@ -1,0 +1,33 @@
+function realign_rest_files(rootDir)
+    % Set SPM defaults and initialize SPM jobman
+    spm('Defaults', 'fMRI');
+    spm_jobman('initcfg');
+
+    % Recursively fetch all 'rest.nii' files from the root directory
+    files = dir(fullfile(rootDir, '**', 'rest.nii')); 
+    
+    % Loop over all 'rest.nii' files and process each
+    for i = 1:length(files)
+        filePath = fullfile(files(i).folder, files(i).name);
+        fprintf('Realigning file: %s\n', filePath);
+        
+        % Check if the file exists
+        if exist(filePath, 'file') ~= 2
+            warning('File does not exist: %s\n', filePath);
+            continue;
+        end
+        
+        % Initialize the batch for realignment
+        matlabbatch = {};
+        
+        % Realignment (motion correction)
+        matlabbatch{1}.spm.spatial.realign.estwrite.data = {cellstr(filePath)}; % Corrected the file path here
+        matlabbatch{1}.spm.spatial.realign.estwrite.eoptions.quality = 0.9;
+        matlabbatch{1}.spm.spatial.realign.estwrite.eoptions.sep = 4;
+        matlabbatch{1}.spm.spatial.realign.estwrite.eoptions.fwhm = 5;
+        matlabbatch{1}.spm.spatial.realign.estwrite.roptions.which = [2 1]; % Write resliced images
+        
+        % Run the job to realign the images
+        spm_jobman('run', matlabbatch);
+    end
+end
